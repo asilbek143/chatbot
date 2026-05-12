@@ -1184,6 +1184,7 @@
 // ─── API CONFIG ─────────────────────────────────────────
 const API_URL = "https://api.anthropic.com/v1/messages";
 const MODEL = "claude-sonnet-4-20250514";
+const API_KEY = "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";
 
 const SYSTEM_PROMPT = `Sen Asilbek Sobirov tomonidan yaratilgan "Asilbek AI" nomli aqlli yordamchisan.
 Sen O'zbek, Rus va Ingliz tillarida muloqot qila olasan.
@@ -1227,7 +1228,7 @@ function addEmoji() {
 async function callAI(messages, systemPrompt = SYSTEM_PROMPT) {
   const resp = await fetch(API_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
     body: JSON.stringify({
       model: MODEL,
       max_tokens: 1000,
