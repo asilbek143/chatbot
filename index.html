@@ -1,354 +1,1588 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AI Yordamchi — Asilbek Sobirov</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asilbek AI — Aqlli Yordamchi</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:'Outfit',sans-serif;
-  background:linear-gradient(135deg,#1a1333 0%,#0f0c29 50%,#1a1333 100%);
-  display:flex;align-items:center;justify-content:center;
-  min-height:100vh;padding:20px;
-  position:relative;overflow:hidden;
-}
-body::before{
-  content:'';position:fixed;inset:0;
-  background:radial-gradient(ellipse at 20% 50%, rgba(108,99,255,0.15) 0%, transparent 60%),
-             radial-gradient(ellipse at 80% 20%, rgba(167,139,250,0.1) 0%, transparent 50%);
-  pointer-events:none;
-}
-:root{
-  --accent:#7c6fff;
-  --accent2:#a78bfa;
-  --accentbg:rgba(124,111,255,0.12);
-  --glass:rgba(255,255,255,0.04);
-  --glassborder:rgba(255,255,255,0.1);
-  --text:#f0eeff;
-  --textmuted:#9d97c4;
-}
-#cw{
-  display:flex;flex-direction:column;
-  width:100%;max-width:700px;
-  height:90vh;max-height:720px;
-  border-radius:24px;overflow:hidden;
-  background:rgba(18,15,40,0.9);
-  backdrop-filter:blur(20px);
-  border:0.5px solid rgba(124,111,255,0.25);
-  box-shadow:0 32px 80px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(255,255,255,0.05) inset;
-  position:relative;z-index:1;
-}
-#hdr{
-  padding:18px 22px;
-  background:rgba(255,255,255,0.03);
-  border-bottom:0.5px solid rgba(255,255,255,0.08);
-  display:flex;align-items:center;gap:13px;
-  flex-shrink:0;
-}
-.hav{
-  width:46px;height:46px;border-radius:50%;
-  background:linear-gradient(135deg,#6C63FF,#a78bfa);
-  display:flex;align-items:center;justify-content:center;
-  font-size:20px;color:#fff;
-  box-shadow:0 4px 15px rgba(108,99,255,0.5);
-  flex-shrink:0;position:relative;
-}
-.hav::after{
-  content:'';position:absolute;inset:-3px;border-radius:50%;
-  border:1.5px solid rgba(124,111,255,0.4);
-  animation:ring 3s infinite;
-}
-@keyframes ring{0%,100%{transform:scale(1);opacity:0.6}50%{transform:scale(1.12);opacity:0}}
-.hinfo p{font-size:15px;font-weight:600;color:var(--text)}
-.hinfo span{font-size:12px;color:var(--textmuted)}
-.hbadge{
-  margin-left:auto;display:flex;align-items:center;gap:6px;
-  padding:5px 12px;border-radius:20px;
-  background:rgba(16,185,129,0.1);border:0.5px solid rgba(16,185,129,0.25);
-  font-size:12px;color:#34d399;font-weight:500;
-}
-.hdot{width:6px;height:6px;border-radius:50%;background:#10b981;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-#msgs{
-  flex:1;overflow-y:auto;
-  padding:20px 18px;
-  display:flex;flex-direction:column;gap:16px;
-  scroll-behavior:smooth;
-}
-#msgs::-webkit-scrollbar{width:3px}
-#msgs::-webkit-scrollbar-thumb{background:rgba(124,111,255,0.3);border-radius:3px}
-.mrow{display:flex;gap:10px;align-items:flex-end;max-width:85%}
-.mrow.u{align-self:flex-end;flex-direction:row-reverse}
-.mav{
-  width:32px;height:32px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:600;flex-shrink:0;
-}
-.mav.ai{background:linear-gradient(135deg,#6C63FF,#a78bfa);color:#fff;box-shadow:0 2px 8px rgba(108,99,255,0.4)}
-.mav.usr{background:rgba(124,111,255,0.2);color:#a78bfa;border:0.5px solid rgba(124,111,255,0.3)}
-.bbl{
-  padding:12px 16px;
-  font-size:14px;line-height:1.7;
-  word-break:break-word;max-width:100%;
-  color:var(--text);
-}
-.bbl.ai{
-  background:rgba(255,255,255,0.05);
-  border:0.5px solid rgba(255,255,255,0.07);
-  border-radius:4px 18px 18px 18px;
-}
-.bbl.u{
-  background:linear-gradient(135deg,#6C63FF,#8b7fff);
-  color:#fff;
-  border-radius:18px 4px 18px 18px;
-  box-shadow:0 4px 15px rgba(108,99,255,0.3);
-}
-.ts{font-size:11px;color:var(--textmuted);margin-top:4px}
-.mrow.u .ts{text-align:right}
-.typing{display:flex;gap:5px;padding:4px 0;align-items:center}
-.typing span{
-  width:7px;height:7px;border-radius:50%;
-  background:var(--textmuted);animation:tdot 1.3s infinite;
-}
-.typing span:nth-child(2){animation-delay:.15s}
-.typing span:nth-child(3){animation-delay:.3s}
-@keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.3}30%{transform:translateY(-5px);opacity:1}}
-.qchips{
-  display:flex;flex-wrap:wrap;gap:6px;
-  padding:10px 18px 12px;
-  border-top:0.5px solid rgba(255,255,255,0.06);
-  background:rgba(255,255,255,0.02);
-  flex-shrink:0;
-}
-.qchip{
-  padding:6px 13px;border-radius:20px;
-  font-size:12px;font-family:'Outfit',sans-serif;
-  border:0.5px solid rgba(255,255,255,0.12);
-  background:rgba(255,255,255,0.04);
-  color:var(--textmuted);cursor:pointer;transition:all .2s;
-}
-.qchip:hover{border-color:var(--accent);color:var(--accent2);background:var(--accentbg);transform:translateY(-1px)}
-#inp{
-  padding:14px 16px;
-  border-top:0.5px solid rgba(255,255,255,0.06);
-  background:rgba(255,255,255,0.02);
-  display:flex;align-items:flex-end;gap:8px;flex-shrink:0;
-}
-#txt{
-  flex:1;resize:none;
-  border:0.5px solid rgba(255,255,255,0.1);
-  border-radius:16px;padding:11px 16px;
-  font-size:14px;font-family:'Outfit',sans-serif;
-  background:rgba(255,255,255,0.06);
-  color:var(--text);outline:none;
-  max-height:110px;line-height:1.5;
-  transition:border-color .15s,background .15s;
-}
-#txt:focus{border-color:rgba(124,111,255,0.5);background:rgba(124,111,255,0.06)}
-#txt::placeholder{color:rgba(157,151,196,0.6)}
-#sbtn{
-  width:42px;height:42px;border-radius:50%;border:none;
-  background:linear-gradient(135deg,#6C63FF,#a78bfa);
-  color:#fff;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
-  transition:transform .15s,opacity .15s;
-  box-shadow:0 4px 15px rgba(108,99,255,0.4);
-}
-#sbtn:hover{transform:scale(1.08)}
-#sbtn:active{transform:scale(0.95)}
-#sbtn:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.msgfade{animation:mfade .3s ease}
-@keyframes mfade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-#footer{
-  text-align:center;padding:8px;
-  font-size:11px;color:rgba(157,151,196,0.4);
-  flex-shrink:0;
-}
-#footer span{color:rgba(124,111,255,0.6)}
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Sora:wght@300;400;600;700;800&display=swap');
+
+  :root {
+    --bg: #050a0f;
+    --surface: #0d1520;
+    --surface2: #131e2d;
+    --border: #1a2d45;
+    --accent: #00d4ff;
+    --accent2: #7b5ea7;
+    --accent3: #ff6b35;
+    --text: #e8f4f8;
+    --text-dim: #6b8fa8;
+    --glow: 0 0 20px rgba(0, 212, 255, 0.3);
+    --glow2: 0 0 30px rgba(123, 94, 167, 0.4);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 600px 400px at 20% 10%, rgba(0, 212, 255, 0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 500px 500px at 80% 80%, rgba(123, 94, 167, 0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 400px 300px at 50% 50%, rgba(255, 107, 53, 0.03) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  .header {
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    background: rgba(13, 21, 32, 0.9);
+    backdrop-filter: blur(20px);
+    position: relative;
+    z-index: 10;
+    flex-shrink: 0;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    box-shadow: var(--glow);
+    animation: pulse-logo 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-logo {
+    0%, 100% { box-shadow: 0 0 15px rgba(0,212,255,0.3); }
+    50% { box-shadow: 0 0 30px rgba(0,212,255,0.6); }
+  }
+
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .logo-name {
+    font-size: 18px;
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+  }
+
+  .logo-sub {
+    font-size: 10px;
+    color: var(--text-dim);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mode-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .mode-btn:hover, .mode-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0, 212, 255, 0.05);
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00ff88;
+    box-shadow: 0 0 8px #00ff88;
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* Main layout */
+  .main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 240px;
+    border-right: 1px solid var(--border);
+    background: rgba(13, 21, 32, 0.6);
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    gap: 6px;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  .sidebar-title {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    font-family: 'Space Mono', monospace;
+    padding: 8px 8px 4px;
+    text-transform: uppercase;
+  }
+
+  .feature-btn {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-dim);
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+    width: 100%;
+  }
+
+  .feature-btn:hover, .feature-btn.active {
+    background: rgba(0, 212, 255, 0.08);
+    border-color: rgba(0, 212, 255, 0.2);
+    color: var(--text);
+  }
+
+  .feature-btn.active {
+    color: var(--accent);
+  }
+
+  .feature-icon {
+    font-size: 16px;
+    width: 24px;
+    text-align: center;
+  }
+
+  .new-chat-btn {
+    margin-top: 8px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    background: rgba(0, 212, 255, 0.06);
+    color: var(--accent);
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .new-chat-btn:hover {
+    background: rgba(0, 212, 255, 0.15);
+    box-shadow: var(--glow);
+  }
+
+  .creator-badge {
+    margin-top: auto;
+    padding: 12px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(123, 94, 167, 0.1), rgba(0, 212, 255, 0.05));
+    border: 1px solid rgba(123, 94, 167, 0.2);
+    text-align: center;
+  }
+
+  .creator-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .creator-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* Chat area */
+  .chat-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Mode panel */
+  .mode-panel {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .mode-panel.active {
+    display: flex;
+  }
+
+  /* Messages */
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    scroll-behavior: smooth;
+  }
+
+  .messages::-webkit-scrollbar { width: 4px; }
+  .messages::-webkit-scrollbar-track { background: transparent; }
+  .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* Welcome screen */
+  .welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    text-align: center;
+    padding: 40px;
+    gap: 20px;
+  }
+
+  .welcome-icon {
+    font-size: 64px;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .welcome h1 {
+    font-size: 36px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .welcome p {
+    font-size: 15px;
+    color: var(--text-dim);
+    max-width: 400px;
+    line-height: 1.6;
+  }
+
+  .quick-actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    width: 100%;
+    max-width: 480px;
+    margin-top: 8px;
+  }
+
+  .quick-btn {
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-align: left;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .quick-btn:hover {
+    border-color: var(--accent);
+    background: rgba(0, 212, 255, 0.05);
+    transform: translateY(-2px);
+    box-shadow: var(--glow);
+  }
+
+  .quick-btn-icon { font-size: 20px; }
+  .quick-btn-text { display: flex; flex-direction: column; gap: 2px; }
+  .quick-btn-title { font-weight: 600; font-size: 13px; }
+  .quick-btn-desc { font-size: 11px; color: var(--text-dim); }
+
+  /* Message bubbles */
+  .message {
+    display: flex;
+    gap: 12px;
+    max-width: 800px;
+    animation: fadeUp 0.3s ease forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .message.user { flex-direction: row-reverse; align-self: flex-end; }
+  .message.ai { align-self: flex-start; }
+
+  .msg-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .message.ai .msg-avatar {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    box-shadow: var(--glow);
+  }
+
+  .message.user .msg-avatar {
+    background: linear-gradient(135deg, var(--accent3), #ff3366);
+  }
+
+  .msg-bubble {
+    padding: 12px 16px;
+    border-radius: 14px;
+    font-size: 14px;
+    line-height: 1.65;
+    max-width: 560px;
+  }
+
+  .message.ai .msg-bubble {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-top-left-radius: 4px;
+  }
+
+  .message.user .msg-bubble {
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(123, 94, 167, 0.15));
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-top-right-radius: 4px;
+  }
+
+  .msg-meta {
+    font-size: 10px;
+    color: var(--text-dim);
+    font-family: 'Space Mono', monospace;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Typing indicator */
+  .typing {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 16px;
+  }
+
+  .typing span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: typing-dot 1.2s ease-in-out infinite;
+  }
+
+  .typing span:nth-child(2) { animation-delay: 0.2s; background: var(--accent2); }
+  .typing span:nth-child(3) { animation-delay: 0.4s; background: var(--accent3); }
+
+  @keyframes typing-dot {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+
+  /* Input area */
+  .input-area {
+    padding: 16px 24px 20px;
+    border-top: 1px solid var(--border);
+    background: rgba(13, 21, 32, 0.95);
+    backdrop-filter: blur(20px);
+    flex-shrink: 0;
+  }
+
+  .input-wrapper {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 10px 12px;
+    transition: border-color 0.2s;
+  }
+
+  .input-wrapper:focus-within {
+    border-color: rgba(0, 212, 255, 0.4);
+    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.05);
+  }
+
+  .input-tools {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .tool-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    transition: all 0.2s;
+  }
+
+  .tool-btn:hover {
+    background: rgba(0, 212, 255, 0.1);
+    color: var(--accent);
+  }
+
+  #userInput {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    resize: none;
+    max-height: 140px;
+    min-height: 24px;
+    line-height: 1.5;
+  }
+
+  #userInput::placeholder { color: var(--text-dim); }
+
+  .send-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    box-shadow: var(--glow);
+  }
+
+  .send-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 25px rgba(0,212,255,0.5);
+  }
+
+  .input-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* Tool panels */
+  .tool-panel {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+  }
+
+  .panel-title {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .panel-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .tool-card {
+    padding: 18px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+
+  .tool-card:hover {
+    border-color: var(--accent);
+    background: rgba(0, 212, 255, 0.04);
+    transform: translateY(-3px);
+    box-shadow: var(--glow);
+  }
+
+  .tool-card-icon { font-size: 28px; margin-bottom: 10px; }
+  .tool-card-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .tool-card-desc { font-size: 12px; color: var(--text-dim); line-height: 1.4; }
+
+  /* Image generator panel */
+  .img-gen {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .gen-input-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .gen-input {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .gen-input:focus { border-color: var(--accent); }
+
+  .gen-btn {
+    padding: 12px 20px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .gen-btn:hover { transform: scale(1.03); box-shadow: var(--glow); }
+
+  .img-placeholder {
+    border: 2px dashed var(--border);
+    border-radius: 16px;
+    padding: 60px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+
+  .img-placeholder.loading {
+    border-color: var(--accent);
+    animation: border-pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes border-pulse {
+    0%, 100% { border-color: var(--accent); }
+    50% { border-color: var(--accent2); }
+  }
+
+  /* Code panel */
+  .code-panel-inner { display: flex; flex-direction: column; gap: 12px; }
+  
+  .lang-select {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+    width: 200px;
+  }
+
+  .code-area {
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: #020810;
+    color: #00ff88;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    min-height: 200px;
+    resize: vertical;
+    outline: none;
+    line-height: 1.6;
+    transition: border-color 0.2s;
+  }
+
+  .code-area:focus { border-color: #00ff88; }
+
+  /* Translate panel */
+  .translate-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .translate-box {
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    min-height: 150px;
+    resize: none;
+    outline: none;
+    transition: border-color 0.2s;
+    line-height: 1.6;
+  }
+
+  .translate-box:focus { border-color: var(--accent); }
+
+  .swap-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--accent);
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .swap-btn:hover { background: rgba(0,212,255,0.1); transform: rotate(180deg); }
+
+  /* Summarize panel */
+  .summarize-inner { display: flex; flex-direction: column; gap: 12px; }
+
+  .result-box {
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+    min-height: 120px;
+    white-space: pre-wrap;
+  }
+
+  .result-box.empty { color: var(--text-dim); font-style: italic; }
+
+  /* Action bar */
+  .action-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .action-chip {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .action-chip:hover, .action-chip.primary {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0, 212, 255, 0.05);
+  }
+
+  .action-chip.primary {
+    background: rgba(0, 212, 255, 0.1);
+  }
+
+  /* Loading spinner */
+  .spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(0,212,255,0.2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Settings panel */
+  .settings-inner { display: flex; flex-direction: column; gap: 20px; }
+
+  .setting-group {
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .setting-group h3 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .toggle {
+    width: 42px;
+    height: 24px;
+    border-radius: 12px;
+    background: var(--border);
+    cursor: pointer;
+    position: relative;
+    transition: background 0.2s;
+  }
+
+  .toggle.on { background: var(--accent); }
+
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: white;
+    top: 3px;
+    left: 3px;
+    transition: left 0.2s;
+  }
+
+  .toggle.on::after { left: 21px; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .sidebar { display: none; }
+    .quick-actions { grid-template-columns: 1fr; }
+    .translate-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
-<div id="cw">
-  <div id="hdr">
-    <div class="hav">✦</div>
-    <div class="hinfo">
-      <p>Aqlli AI Yordamchi</p>
-      <span>Asilbek Sobirov tomonidan yaratilgan</span>
-    </div>
-    <div class="hbadge"><div class="hdot"></div>Faol</div>
-  </div>
 
-  <div id="msgs">
-    <div class="mrow msgfade">
-      <div class="mav ai">✦</div>
-      <div>
-        <div class="bbl ai">Assalomu alaykum! 👋 Men <b>Asilbek Sobirov</b> tomonidan yaratilgan aqlli AI yordamchiman.<br><br>Istalgan savolingizni bering — fan, texnologiya, tarix, matematika, dasturlash yoki kundalik hayot haqida. Har qanday narsada yordam bera olaman! 🚀</div>
-        <div class="ts">Hozir</div>
-      </div>
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">🤖</div>
+    <div class="logo-text">
+      <div class="logo-name">Asilbek AI</div>
+      <div class="logo-sub">by Asilbek Sobirov</div>
     </div>
   </div>
-
-  <div class="qchips" id="chips">
-    <div class="qchip">🔬 Ilm-fan</div>
-    <div class="qchip">💻 Dasturlash</div>
-    <div class="qchip">📚 Tarix</div>
-    <div class="qchip">🧮 Matematika</div>
-    <div class="qchip">🌍 Dunyo haqida</div>
-    <div class="qchip">💡 Maslahat</div>
-    <div class="qchip">🎨 Ijodkorlik</div>
-    <div class="qchip">🧠 Psixologiya</div>
+  <div class="header-actions">
+    <div class="status-dot"></div>
+    <button class="mode-btn" onclick="clearChat()">🗑 Tozalash</button>
+    <button class="mode-btn active" onclick="showPanel('chat')">💬 Chat</button>
   </div>
-
-  <div id="inp">
-    <textarea id="txt" rows="1" placeholder="Savolingizni yozing..."></textarea>
-    <button id="sbtn" title="Yuborish">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-      </svg>
-    </button>
-  </div>
-
-  <div id="footer">Yaratuvchi: <span>Asilbek Sobirov</span> · AI texnologiyasi bilan ishlamoqda</div>
 </div>
 
+<!-- MAIN -->
+<div class="main">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-title">Funksiyalar</div>
+
+    <button class="feature-btn active" id="btn-chat" onclick="showPanel('chat')">
+      <span class="feature-icon">💬</span> Chat
+    </button>
+    <button class="feature-btn" id="btn-image" onclick="showPanel('image')">
+      <span class="feature-icon">🎨</span> Rasm Generator
+    </button>
+    <button class="feature-btn" id="btn-code" onclick="showPanel('code')">
+      <span class="feature-icon">👨‍💻</span> Kod Yozish
+    </button>
+    <button class="feature-btn" id="btn-translate" onclick="showPanel('translate')">
+      <span class="feature-icon">🌐</span> Tarjimon
+    </button>
+    <button class="feature-btn" id="btn-summarize" onclick="showPanel('summarize')">
+      <span class="feature-icon">📝</span> Xulosa
+    </button>
+    <button class="feature-btn" id="btn-quiz" onclick="showPanel('quiz')">
+      <span class="feature-icon">🧠</span> Test / Quiz
+    </button>
+    <button class="feature-btn" id="btn-settings" onclick="showPanel('settings')">
+      <span class="feature-icon">⚙️</span> Sozlamalar
+    </button>
+
+    <button class="new-chat-btn" onclick="clearChat()">
+      ✚ Yangi chat
+    </button>
+
+    <div class="creator-badge">
+      <div style="font-size:24px;margin-bottom:4px">👑</div>
+      <div class="creator-name">Asilbek Sobirov</div>
+      <div class="creator-label">Creator & Developer</div>
+    </div>
+  </div>
+
+  <!-- CHAT PANEL -->
+  <div class="chat-area">
+
+    <!-- CHAT -->
+    <div class="mode-panel active" id="panel-chat">
+      <div class="messages" id="chatMessages">
+        <div class="welcome" id="welcomeScreen">
+          <div class="welcome-icon">🤖</div>
+          <h1>Asilbek AI</h1>
+          <p>Salom! Men Asilbek Sobirov tomonidan yaratilgan aqlli yordamchiman. Sizga qanday yordam bera olaman?</p>
+          <div class="quick-actions">
+            <button class="quick-btn" onclick="quickAsk('Menga qisqa hikoya yozing')">
+              <span class="quick-btn-icon">📖</span>
+              <div class="quick-btn-text">
+                <div class="quick-btn-title">Hikoya yozing</div>
+                <div class="quick-btn-desc">Ijodiy matn yaratish</div>
+              </div>
+            </button>
+            <button class="quick-btn" onclick="quickAsk('Python dasturlash tilini tushuntiring')">
+              <span class="quick-btn-icon">🐍</span>
+              <div class="quick-btn-text">
+                <div class="quick-btn-title">Dasturlash</div>
+                <div class="quick-btn-desc">Kod va tushuntirish</div>
+              </div>
+            </button>
+            <button class="quick-btn" onclick="quickAsk('Sog\'lom ovqatlanish haqida maslahat bering')">
+              <span class="quick-btn-icon">🥗</span>
+              <div class="quick-btn-text">
+                <div class="quick-btn-title">Maslahat</div>
+                <div class="quick-btn-desc">Hayot bo'yicha tavsiyalar</div>
+              </div>
+            </button>
+            <button class="quick-btn" onclick="quickAsk('Bugungi dunyo yangiliklari qanday?')">
+              <span class="quick-btn-icon">🌍</span>
+              <div class="quick-btn-text">
+                <div class="quick-btn-title">Dunyo yangiliklari</div>
+                <div class="quick-btn-desc">So'nggi xabarlar</div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="input-area">
+        <div class="input-wrapper">
+          <div class="input-tools">
+            <button class="tool-btn" title="Emoji" onclick="addEmoji()">😊</button>
+          </div>
+          <textarea id="userInput" placeholder="Xabar yozing..." rows="1"
+            onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+          <button class="send-btn" onclick="sendMessage()">➤</button>
+        </div>
+        <div class="input-footer">⚡ Asilbek AI v1.0 · Barcha huquqlar himoyalangan</div>
+      </div>
+    </div>
+
+    <!-- IMAGE PANEL -->
+    <div class="mode-panel" id="panel-image">
+      <div class="tool-panel">
+        <div class="panel-title">🎨 Rasm Generator</div>
+        <div class="panel-desc">Matn orqali tasvirlar haqida tasavvur hosil qiling va tavsiflar oling</div>
+        <div class="img-gen">
+          <div class="gen-input-row">
+            <input class="gen-input" id="imgPrompt" placeholder="Rasmni tasvirlab bering... masalan: 'tog'lardagi qor yog'ishi'">
+            <button class="gen-btn" onclick="generateImage()">✨ Tasvirla</button>
+          </div>
+          <div class="action-row">
+            <button class="action-chip" onclick="imgStyle('realistic')">📷 Realistik</button>
+            <button class="action-chip" onclick="imgStyle('anime')">🎌 Anime</button>
+            <button class="action-chip" onclick="imgStyle('oil painting')">🖼 Moy bo'yoq</button>
+            <button class="action-chip" onclick="imgStyle('digital art')">💻 Raqamli san'at</button>
+          </div>
+          <div class="img-placeholder" id="imgResult">
+            <div style="font-size:40px;margin-bottom:12px">🖼</div>
+            <div>Rasm tavsifi uchun prompt kiriting va "Tasvirla" tugmasini bosing</div>
+            <div style="font-size:11px;margin-top:8px;color:#4a6a7a">AI rasm haqida batafsil tavsif va ko'rsatmalar beradi</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CODE PANEL -->
+    <div class="mode-panel" id="panel-code">
+      <div class="tool-panel">
+        <div class="panel-title">👨‍💻 Kod Yordamchisi</div>
+        <div class="panel-desc">Kod yozing, tushuntirish oling yoki xatolarni toping</div>
+        <div class="code-panel-inner">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <select class="lang-select" id="codeLanguage">
+              <option value="python">🐍 Python</option>
+              <option value="javascript">🟨 JavaScript</option>
+              <option value="java">☕ Java</option>
+              <option value="c++">⚙️ C++</option>
+              <option value="html">🌐 HTML/CSS</option>
+              <option value="sql">🗄 SQL</option>
+              <option value="rust">🦀 Rust</option>
+            </select>
+            <button class="action-chip primary" onclick="explainCode()">💡 Tushuntir</button>
+            <button class="action-chip" onclick="fixCode()">🔧 Xatoni tuz</button>
+            <button class="action-chip" onclick="optimizeCode()">⚡ Optimallashtir</button>
+            <button class="action-chip" onclick="generateCode()">✨ Kod yarat</button>
+          </div>
+          <textarea class="code-area" id="codeInput" placeholder="// Kodingizni shu yerga kiriting yoki topshiriq yozing...
+// Masalan: 'Fibonacci ketma-ketligini hisoblash funksiyasi yozing'"></textarea>
+          <div class="result-box empty" id="codeResult">Natija bu yerda ko'rsatiladi...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRANSLATE PANEL -->
+    <div class="mode-panel" id="panel-translate">
+      <div class="tool-panel">
+        <div class="panel-title">🌐 Tarjimon</div>
+        <div class="panel-desc">Matnni istalgan tilda tarjima qiling</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <select class="lang-select" id="fromLang">
+              <option value="uz">🇺🇿 O'zbek</option>
+              <option value="ru">🇷🇺 Rus</option>
+              <option value="en">🇬🇧 Ingliz</option>
+              <option value="de">🇩🇪 Nemis</option>
+              <option value="fr">🇫🇷 Fransuz</option>
+              <option value="ar">🇸🇦 Arab</option>
+              <option value="zh">🇨🇳 Xitoy</option>
+              <option value="ko">🇰🇷 Koreys</option>
+              <option value="ja">🇯🇵 Yapon</option>
+            </select>
+            <button class="swap-btn" onclick="swapLangs()" title="Tillarni almashtirish">⇄</button>
+            <select class="lang-select" id="toLang">
+              <option value="en">🇬🇧 Ingliz</option>
+              <option value="ru">🇷🇺 Rus</option>
+              <option value="uz">🇺🇿 O'zbek</option>
+              <option value="de">🇩🇪 Nemis</option>
+              <option value="fr">🇫🇷 Fransuz</option>
+              <option value="ar">🇸🇦 Arab</option>
+              <option value="zh">🇨🇳 Xitoy</option>
+              <option value="ko">🇰🇷 Koreys</option>
+              <option value="ja">🇯🇵 Yapon</option>
+            </select>
+            <button class="gen-btn" onclick="translateText()">🌐 Tarjima qil</button>
+          </div>
+          <div class="translate-grid">
+            <textarea class="translate-box" id="translateInput" placeholder="Tarjima qilish uchun matn kiriting..."></textarea>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text-dim)">
+              <span style="font-size:20px">→</span>
+            </div>
+            <div class="translate-box" id="translateOutput" style="background:var(--surface);border-color:rgba(0,212,255,0.1)">Tarjima natijasi...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUMMARIZE PANEL -->
+    <div class="mode-panel" id="panel-summarize">
+      <div class="tool-panel">
+        <div class="panel-title">📝 Matn Xulosa</div>
+        <div class="panel-desc">Uzun matnlarni qisqacha xulosaga aylantiring</div>
+        <div class="summarize-inner">
+          <div class="action-row">
+            <button class="action-chip primary" onclick="setSumType('short')">📌 Qisqa</button>
+            <button class="action-chip" onclick="setSumType('bullet')">• Ro'yxat</button>
+            <button class="action-chip" onclick="setSumType('detailed')">📋 Batafsil</button>
+            <button class="action-chip" onclick="setSumType('simple')">🙂 Oddiy tilda</button>
+          </div>
+          <textarea class="translate-box" id="sumInput" style="min-height:180px" placeholder="Xulosa qilish uchun matnni bu yerga joylashtiring..."></textarea>
+          <button class="gen-btn" style="align-self:flex-start" onclick="summarizeText()">📝 Xulosa qil</button>
+          <div class="result-box empty" id="sumResult">Xulosa natijasi bu yerda ko'rsatiladi...</div>
+          <div class="action-row" id="sumActions" style="display:none">
+            <button class="action-chip" onclick="copyResult('sumResult')">📋 Nusxa olish</button>
+            <button class="action-chip" onclick="speakResult('sumResult')">🔊 Ovozli o'qish</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ PANEL -->
+    <div class="mode-panel" id="panel-quiz">
+      <div class="tool-panel">
+        <div class="panel-title">🧠 Bilim Testi</div>
+        <div class="panel-desc">Mavzu bo'yicha test savollarini yarat va bilimingizni sinab ko'ring</div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+            <input class="gen-input" id="quizTopic" placeholder="Mavzu: masalan 'Matematika', 'Tarix', 'Python'" style="flex:1">
+            <select class="lang-select" id="quizCount">
+              <option value="3">3 savol</option>
+              <option value="5" selected>5 savol</option>
+              <option value="10">10 savol</option>
+            </select>
+            <button class="gen-btn" onclick="generateQuiz()">🧠 Test yarat</button>
+          </div>
+          <div id="quizArea">
+            <div style="text-align:center;padding:40px;color:var(--text-dim)">
+              <div style="font-size:40px;margin-bottom:12px">🧠</div>
+              <div>Mavzu kiriting va test yarating</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS PANEL -->
+    <div class="mode-panel" id="panel-settings">
+      <div class="tool-panel">
+        <div class="panel-title">⚙️ Sozlamalar</div>
+        <div class="panel-desc">Asilbek AI ni o'zingizga moslashtiring</div>
+        <div class="settings-inner">
+          <div class="setting-group">
+            <h3>🌙 Ko'rinish</h3>
+            <div class="setting-row">
+              <span>Qorong'i rejim</span>
+              <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <div class="setting-row">
+              <span>Animatsiyalar</span>
+              <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+            </div>
+          </div>
+          <div class="setting-group">
+            <h3>💬 Chat sozlamalari</h3>
+            <div class="setting-row">
+              <span>Ovozli javob</span>
+              <div class="toggle" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <div class="setting-row">
+              <span>Markdown formatlash</span>
+              <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <div class="setting-row">
+              <span>Yozilayotganini ko'rsatish</span>
+              <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+            </div>
+          </div>
+          <div class="setting-group">
+            <h3>🤖 AI modeli</h3>
+            <div class="setting-row">
+              <span>Model</span>
+              <span style="color:var(--accent);font-family:'Space Mono',monospace;font-size:12px">claude-sonnet-4</span>
+            </div>
+            <div class="setting-row">
+              <span>Yaratuvchi</span>
+              <span style="color:var(--accent2);font-family:'Space Mono',monospace;font-size:12px">Asilbek Sobirov</span>
+            </div>
+          </div>
+          <div class="setting-group">
+            <h3>🗑 Ma'lumotlar</h3>
+            <button class="action-chip" onclick="clearChat()" style="color:#ff6b6b;border-color:#ff6b6b">
+              🗑 Chat tarixini o'chirish
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end chat-area -->
+</div><!-- end main -->
+
 <script>
-const msgsEl = document.getElementById('msgs');
-const txtEl  = document.getElementById('txt');
-const sbtn   = document.getElementById('sbtn');
-const chips  = document.querySelectorAll('.qchip');
-const history = [];
+// ─── API CONFIG ─────────────────────────────────────────
+const API_URL = "https://api.anthropic.com/v1/messages";
+const MODEL = "claude-sonnet-4-20250514";
 
-// ⚠️ O'z Anthropic API kalitingizni shu yerga qo'ying:
-const API_KEY = "YOUR_API_KEY_HERE";
+const SYSTEM_PROMPT = `Sen Asilbek Sobirov tomonidan yaratilgan "Asilbek AI" nomli aqlli yordamchisan.
+Sen O'zbek, Rus va Ingliz tillarida muloqot qila olasan.
+Foydalanuvchi qaysi tilda murojaat qilsa, o'sha tilda javob ber.
+Har doim do'stona, foydali va aniq javoblar ber.
+O'zing haqida so'rashganda: "Men Asilbek Sobirov yaratgan Asilbek AI yordamchisiman" de.`;
 
-const SYSTEM = `Siz Asilbek Sobirov tomonidan yaratilgan aqlli, do'stona va bilimdon O'zbek tilidagi AI yordamchisiz.
+// ─── STATE ───────────────────────────────────────────────
+let chatHistory = [];
+let currentSumType = 'short';
+let isLoading = false;
 
-Muhim qoidalar:
-- HAR DOIM O'zbek tilida javob bering
-- "Seni kim yaratdi?" yoki "Yaratuvching kim?" degan savollarga: "Meni Asilbek Sobirov yaratgan" deb javob bering
-- Aniq, tushunarli va foydali javoblar bering
-- Ilmiy savollarga to'liq va sodda tushuntirish bering
-- Zarur bo'lsa, misollar va qadamlar keltiring
-- Emojidan o'rinli foydalaning
-- Javobni lo'nda saqlang, lekin to'liq bo'lsin
-- Foydalanuvchiga hurmat bilan muomala qiling`;
-
-const chipPrompts = {
-  '🔬 Ilm-fan':      'Ilm-fan haqida eng qiziqarli faktlardan birini aytib bering',
-  '💻 Dasturlash':   'Dasturlashni noldan qanday o\'rganish kerak? Bosqichma-bosqich ayting',
-  '📚 Tarix':        'O\'zbekiston tarixidan eng qiziqarli voqealardan birini aytib bering',
-  '🧮 Matematika':   'Kundalik hayotda matematika qanday ishlatiladi? Misollar bering',
-  '🌍 Dunyo haqida': 'Dunyoning eng go\'zal va sirli joylaridan birini tasvirlab bering',
-  '💡 Maslahat':     'Hayotda muvaffaqiyatli bo\'lish uchun eng muhim maslahatlarni bering',
-  '🎨 Ijodkorlik':   'Ijodkorlikni rivojlantirish uchun nima qilish kerak?',
-  '🧠 Psixologiya':  'Insonning xotirasi va o\'rganish qobiliyati haqida qiziqarli ma\'lumot bering'
-};
-
-function getTime() {
-  const n = new Date();
-  return n.getHours().toString().padStart(2,'0') + ':' + n.getMinutes().toString().padStart(2,'0');
+// ─── PANEL SWITCHING ─────────────────────────────────────
+function showPanel(name) {
+  document.querySelectorAll('.mode-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.feature-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  const btn = document.getElementById('btn-' + name);
+  if (btn) btn.classList.add('active');
 }
 
-function addMsg(role, html) {
-  const row = document.createElement('div');
-  row.className = 'mrow msgfade' + (role === 'user' ? ' u' : '');
-  const av = document.createElement('div');
-  av.className = 'mav ' + (role === 'user' ? 'usr' : 'ai');
-  av.textContent = role === 'user' ? 'S' : '✦';
-  const inner = document.createElement('div');
-  const bbl = document.createElement('div');
-  bbl.className = 'bbl ' + (role === 'user' ? 'u' : 'ai');
-  bbl.innerHTML = html;
-  const ts = document.createElement('div');
-  ts.className = 'ts';
-  ts.textContent = getTime();
-  inner.appendChild(bbl);
-  inner.appendChild(ts);
-  if (role === 'user') { row.appendChild(inner); row.appendChild(av); }
-  else { row.appendChild(av); row.appendChild(inner); }
-  msgsEl.appendChild(row);
-  msgsEl.scrollTop = msgsEl.scrollHeight;
-  return bbl;
+// ─── UTILS ───────────────────────────────────────────────
+function now() {
+  return new Date().toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' });
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 140) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function addEmoji() {
+  const emojis = ['😊','🔥','👍','💡','🎯','✨','🚀','🎉','💪','🌟'];
+  document.getElementById('userInput').value += emojis[Math.floor(Math.random()*emojis.length)];
+}
+
+async function callAI(messages, systemPrompt = SYSTEM_PROMPT) {
+  const resp = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: MODEL,
+      max_tokens: 1000,
+      system: systemPrompt,
+      messages
+    })
+  });
+  const data = await resp.json();
+  return data.content?.[0]?.text || 'Xatolik yuz berdi.';
+}
+
+// ─── CHAT ────────────────────────────────────────────────
+function clearChat() {
+  chatHistory = [];
+  const msgs = document.getElementById('chatMessages');
+  msgs.innerHTML = `<div class="welcome" id="welcomeScreen">
+    <div class="welcome-icon">🤖</div>
+    <h1>Asilbek AI</h1>
+    <p>Salom! Men Asilbek Sobirov tomonidan yaratilgan aqlli yordamchiman. Sizga qanday yordam bera olaman?</p>
+    <div class="quick-actions">
+      <button class="quick-btn" onclick="quickAsk('Menga qisqa hikoya yozing')">
+        <span class="quick-btn-icon">📖</span>
+        <div class="quick-btn-text"><div class="quick-btn-title">Hikoya yozing</div><div class="quick-btn-desc">Ijodiy matn yaratish</div></div>
+      </button>
+      <button class="quick-btn" onclick="quickAsk('Python dasturlash tilini tushuntiring')">
+        <span class="quick-btn-icon">🐍</span>
+        <div class="quick-btn-text"><div class="quick-btn-title">Dasturlash</div><div class="quick-btn-desc">Kod va tushuntirish</div></div>
+      </button>
+      <button class="quick-btn" onclick="quickAsk('Sog\\'lom ovqatlanish haqida maslahat bering')">
+        <span class="quick-btn-icon">🥗</span>
+        <div class="quick-btn-text"><div class="quick-btn-title">Maslahat</div><div class="quick-btn-desc">Hayot bo'yicha tavsiyalar</div></div>
+      </button>
+      <button class="quick-btn" onclick="quickAsk('Qiziqarli fan fakti ayting')">
+        <span class="quick-btn-icon">🌍</span>
+        <div class="quick-btn-text"><div class="quick-btn-title">Qiziqarli faktlar</div><div class="quick-btn-desc">Ilm-fan dunyosidan</div></div>
+      </button>
+    </div>
+  </div>`;
+}
+
+function quickAsk(text) {
+  document.getElementById('userInput').value = text;
+  sendMessage();
+}
+
+function appendMessage(role, text) {
+  const welcome = document.getElementById('welcomeScreen');
+  if (welcome) welcome.remove();
+
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = `message ${role}`;
+  div.innerHTML = `
+    <div class="msg-avatar">${role === 'ai' ? '🤖' : '👤'}</div>
+    <div>
+      <div class="msg-bubble">${text.replace(/\n/g, '<br>')}</div>
+      <div class="msg-meta">${role === 'ai' ? 'Asilbek AI' : 'Siz'} · ${now()}</div>
+    </div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
 }
 
 function showTyping() {
-  const row = document.createElement('div');
-  row.className = 'mrow msgfade'; row.id = 'typing';
-  const av = document.createElement('div');
-  av.className = 'mav ai'; av.textContent = '✦';
-  const bbl = document.createElement('div');
-  bbl.className = 'bbl ai';
-  bbl.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
-  row.appendChild(av); row.appendChild(bbl);
-  msgsEl.appendChild(row);
-  msgsEl.scrollTop = msgsEl.scrollHeight;
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'message ai';
+  div.id = 'typingIndicator';
+  div.innerHTML = `<div class="msg-avatar">🤖</div><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
 }
 
-function hideTyping() {
-  const t = document.getElementById('typing');
-  if (t) t.remove();
+function removeTyping() {
+  const el = document.getElementById('typingIndicator');
+  if (el) el.remove();
 }
 
-function formatReply(text) {
-  return text
-    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
-    .replace(/\*(.*?)\*/g, '<i>$1</i>')
-    .replace(/\n/g, '<br>');
-}
+async function sendMessage() {
+  if (isLoading) return;
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text) return;
 
-async function send(text) {
-  if (!text.trim()) return;
-  txtEl.value = ''; txtEl.style.height = 'auto';
-  sbtn.disabled = true;
-  document.getElementById('chips').style.display = 'none';
+  input.value = '';
+  input.style.height = 'auto';
+  isLoading = true;
 
-  addMsg('user', text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'));
-  history.push({ role: 'user', content: text });
+  appendMessage('user', text);
   showTyping();
 
+  chatHistory.push({ role: 'user', content: text });
+
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1024,
-        system: SYSTEM,
-        messages: history
-      })
-    });
-    const d = await res.json();
-    hideTyping();
-    const reply = d.content?.[0]?.text || 'Kechirasiz, xatolik yuz berdi.';
-    addMsg('bot', formatReply(reply));
-    history.push({ role: 'assistant', content: reply });
+    const reply = await callAI(chatHistory);
+    chatHistory.push({ role: 'assistant', content: reply });
+    removeTyping();
+    appendMessage('ai', reply);
   } catch (e) {
-    hideTyping();
-    addMsg('bot', '⚠️ Tarmoq xatosi yuz berdi. Internet aloqangizni tekshiring va qayta urining.');
+    removeTyping();
+    appendMessage('ai', '⚠️ Xatolik yuz berdi. Qaytadan urinib ko\'ring.');
   }
-  sbtn.disabled = false;
-  txtEl.focus();
+  isLoading = false;
 }
 
-sbtn.addEventListener('click', () => send(txtEl.value));
-txtEl.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(txtEl.value); }
-});
-txtEl.addEventListener('input', () => {
-  txtEl.style.height = 'auto';
-  txtEl.style.height = Math.min(txtEl.scrollHeight, 110) + 'px';
-});
-chips.forEach(c => {
-  c.addEventListener('click', () => send(chipPrompts[c.textContent] || c.textContent));
-});
+// ─── IMAGE ───────────────────────────────────────────────
+let imgStyleExtra = '';
+
+function imgStyle(s) {
+  imgStyleExtra = s;
+  document.querySelectorAll('.action-chip').forEach(b => b.classList.remove('primary'));
+  event.target.classList.add('primary');
+}
+
+async function generateImage() {
+  const prompt = document.getElementById('imgPrompt').value.trim();
+  if (!prompt) return alert('Iltimos, tavsif kiriting!');
+  const result = document.getElementById('imgResult');
+  result.classList.add('loading');
+  result.innerHTML = '<div class="spinner"></div><div style="margin-top:12px;color:var(--text-dim)">Tavsif tayyorlanmoqda...</div>';
+
+  const style = imgStyleExtra ? `, uslub: ${imgStyleExtra}` : '';
+  const reply = await callAI([{
+    role: 'user',
+    content: `Quyidagi rasm uchun batafsil vizual tavsif yozing (inglizcha va o'zbekcha), ranglar, kompozitsiya, muhit, yorug'lik haqida aniq yozing. Rasm mavzusi: "${prompt}"${style}. Midjourney yoki Stable Diffusion uchun prompt ham bering.`
+  }]);
+
+  result.classList.remove('loading');
+  result.innerHTML = `
+    <div style="text-align:left;font-size:13px;line-height:1.7">${reply.replace(/\n/g,'<br>')}</div>
+    <div style="margin-top:16px;font-size:11px;color:var(--text-dim);font-family:'Space Mono',monospace">
+      💡 Ushbu tavsifni Midjourney, DALL-E yoki Stable Diffusion'ga kiriting
+    </div>`;
+}
+
+// ─── CODE ────────────────────────────────────────────────
+async function explainCode() {
+  const code = document.getElementById('codeInput').value.trim();
+  const lang = document.getElementById('codeLanguage').value;
+  if (!code) return alert('Iltimos, kod kiriting!');
+  const result = document.getElementById('codeResult');
+  result.innerHTML = '<div class="spinner"></div> Tahlil qilinmoqda...';
+  result.className = 'result-box';
+  const reply = await callAI([{ role:'user', content:`Quyidagi ${lang} kodini o'zbek tilida batafsil tushuntiring:\n\n${code}` }]);
+  result.innerHTML = reply.replace(/\n/g,'<br>');
+}
+
+async function fixCode() {
+  const code = document.getElementById('codeInput').value.trim();
+  const lang = document.getElementById('codeLanguage').value;
+  if (!code) return alert('Iltimos, kod kiriting!');
+  const result = document.getElementById('codeResult');
+  result.innerHTML = '<div class="spinner"></div> Tekshirilmoqda...';
+  result.className = 'result-box';
+  const reply = await callAI([{ role:'user', content:`Quyidagi ${lang} kodidagi xatolarni toping va tuzatilgan versiyasini bering:\n\n${code}` }]);
+  result.innerHTML = reply.replace(/\n/g,'<br>');
+}
+
+async function optimizeCode() {
+  const code = document.getElementById('codeInput').value.trim();
+  const lang = document.getElementById('codeLanguage').value;
+  if (!code) return alert('Iltimos, kod kiriting!');
+  const result = document.getElementById('codeResult');
+  result.innerHTML = '<div class="spinner"></div> Optimallashtirilmoqda...';
+  result.className = 'result-box';
+  const reply = await callAI([{ role:'user', content:`Quyidagi ${lang} kodini optimallashtiring va yaxshiroq variant taklif qiling:\n\n${code}` }]);
+  result.innerHTML = reply.replace(/\n/g,'<br>');
+}
+
+async function generateCode() {
+  const desc = document.getElementById('codeInput').value.trim();
+  const lang = document.getElementById('codeLanguage').value;
+  if (!desc) return alert('Iltimos, topshiriq yozing!');
+  const result = document.getElementById('codeResult');
+  result.innerHTML = '<div class="spinner"></div> Kod yozilmoqda...';
+  result.className = 'result-box';
+  const reply = await callAI([{ role:'user', content:`${lang} tilida quyidagi vazifani bajaradigan kod yozing: ${desc}. Kodni tushuntirish bilan bering.` }]);
+  result.innerHTML = reply.replace(/\n/g,'<br>');
+}
+
+// ─── TRANSLATE ───────────────────────────────────────────
+async function translateText() {
+  const text = document.getElementById('translateInput').value.trim();
+  const from = document.getElementById('fromLang');
+  const to = document.getElementById('toLang');
+  const fromText = from.options[from.selectedIndex].text;
+  const toText = to.options[to.selectedIndex].text;
+  if (!text) return alert('Tarjima qilish uchun matn kiriting!');
+
+  const output = document.getElementById('translateOutput');
+  output.innerHTML = '<div class="spinner"></div>';
+
+  const reply = await callAI([{
+    role: 'user',
+    content: `Quyidagi matnni ${fromText} tilidan ${toText} tiliga tarjima qiling. Faqat tarjimani bering, boshqa hech narsa yo'q:\n\n${text}`
+  }]);
+  output.textContent = reply;
+}
+
+function swapLangs() {
+  const from = document.getElementById('fromLang');
+  const to = document.getElementById('toLang');
+  const tmp = from.value;
+  from.value = to.value;
+  to.value = tmp;
+
+  const inputEl = document.getElementById('translateInput');
+  const outputEl = document.getElementById('translateOutput');
+  const tmpText = inputEl.value;
+  inputEl.value = outputEl.textContent !== 'Tarjima natijasi...' ? outputEl.textContent : '';
+  outputEl.textContent = tmpText || 'Tarjima natijasi...';
+}
+
+// ─── SUMMARIZE ───────────────────────────────────────────
+function setSumType(t) {
+  currentSumType = t;
+  document.querySelectorAll('#panel-summarize .action-chip').forEach(b => b.classList.remove('primary'));
+  event.target.classList.add('primary');
+}
+
+async function summarizeText() {
+  const text = document.getElementById('sumInput').value.trim();
+  if (!text) return alert('Matn kiriting!');
+  const result = document.getElementById('sumResult');
+  result.innerHTML = '<div class="spinner"></div> Xulosa qilinmoqda...';
+  result.className = 'result-box';
+
+  const types = {
+    short: 'qisqa 2-3 jumlada xulosa qiling',
+    bullet: 'asosiy fikrlarni ro\'yxat shaklida bering',
+    detailed: 'batafsil xulosa yozing',
+    simple: 'oddiy, tushunarli tilda xulosa qiling'
+  };
+
+  const reply = await callAI([{
+    role:'user',
+    content:`Quyidagi matnni o'zbek tilida ${types[currentSumType]}:\n\n${text}`
+  }]);
+
+  result.innerHTML = reply.replace(/\n/g,'<br>');
+  result.className = 'result-box';
+  document.getElementById('sumActions').style.display = 'flex';
+}
+
+function copyResult(id) {
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text).then(() => alert('Nusxa olindi! ✓'));
+}
+
+function speakResult(id) {
+  const text = document.getElementById(id).innerText;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'uz-UZ';
+  speechSynthesis.speak(utterance);
+}
+
+// ─── QUIZ ────────────────────────────────────────────────
+let quizData = null;
+let quizAnswers = {};
+
+async function generateQuiz() {
+  const topic = document.getElementById('quizTopic').value.trim();
+  const count = document.getElementById('quizCount').value;
+  if (!topic) return alert('Mavzu kiriting!');
+
+  const area = document.getElementById('quizArea');
+  area.innerHTML = '<div style="text-align:center;padding:40px"><div class="spinner"></div><div style="margin-top:12px;color:var(--text-dim)">Savollar tayyorlanmoqda...</div></div>';
+
+  try {
+    const reply = await callAI([{
+      role:'user',
+      content:`"${topic}" mavzusi bo'yicha ${count} ta test savoli yarat. JSON formatida qaytaring, boshqa hech narsa yozma:
+{"questions":[{"q":"savol","options":["A","B","C","D"],"answer":0}]}
+answer - to'g'ri javob indeksi (0-3). Barcha savollar o'zbek tilida bo'lsin.`
+    }], `Faqat JSON qaytarasan, boshqa hech narsa yozma. Markdown yo backtick ishlatma.`);
+
+    const clean = reply.replace(/```json|```/g,'').trim();
+    quizData = JSON.parse(clean);
+    quizAnswers = {};
+    renderQuiz();
+  } catch(e) {
+    area.innerHTML = '<div style="color:#ff6b6b;padding:20px">Xatolik: Savollarni yuklab bo\'lmadi. Qaytadan urinib ko\'ring.</div>';
+  }
+}
+
+function renderQuiz() {
+  if (!quizData) return;
+  const area = document.getElementById('quizArea');
+  let html = '<div style="display:flex;flex-direction:column;gap:16px">';
+  quizData.questions.forEach((q, qi) => {
+    html += `<div style="padding:16px;border-radius:12px;border:1px solid var(--border);background:var(--surface)">
+      <div style="font-weight:600;margin-bottom:12px;font-size:14px">${qi+1}. ${q.q}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">`;
+    q.options.forEach((opt, oi) => {
+      const letter = ['A','B','C','D'][oi];
+      html += `<button onclick="selectAnswer(${qi},${oi})" id="opt-${qi}-${oi}"
+        style="padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);
+        color:var(--text-dim);font-family:'Sora',sans-serif;font-size:13px;cursor:pointer;
+        text-align:left;transition:all 0.2s">
+        <b>${letter}.</b> ${opt}</button>`;
+    });
+    html += `</div></div>`;
+  });
+  html += `<button class="gen-btn" style="align-self:flex-start" onclick="checkQuiz()">✅ Tekshirish</button></div>`;
+  area.innerHTML = html;
+}
+
+function selectAnswer(qi, oi) {
+  quizAnswers[qi] = oi;
+  for (let i = 0; i < 4; i++) {
+    const btn = document.getElementById(`opt-${qi}-${i}`);
+    if (btn) {
+      btn.style.borderColor = i === oi ? 'var(--accent)' : 'var(--border)';
+      btn.style.color = i === oi ? 'var(--accent)' : 'var(--text-dim)';
+      btn.style.background = i === oi ? 'rgba(0,212,255,0.08)' : 'var(--surface2)';
+    }
+  }
+}
+
+function checkQuiz() {
+  if (!quizData) return;
+  let score = 0;
+  quizData.questions.forEach((q, qi) => {
+    const correct = q.answer;
+    const chosen = quizAnswers[qi];
+    for (let i = 0; i < 4; i++) {
+      const btn = document.getElementById(`opt-${qi}-${i}`);
+      if (!btn) continue;
+      if (i === correct) {
+        btn.style.borderColor = '#00ff88';
+        btn.style.background = 'rgba(0,255,136,0.1)';
+        btn.style.color = '#00ff88';
+      } else if (i === chosen && chosen !== correct) {
+        btn.style.borderColor = '#ff6b6b';
+        btn.style.background = 'rgba(255,107,107,0.1)';
+        btn.style.color = '#ff6b6b';
+      }
+    }
+    if (chosen === correct) score++;
+  });
+
+  const total = quizData.questions.length;
+  const pct = Math.round(score/total*100);
+  const emoji = pct >= 80 ? '🏆' : pct >= 60 ? '👍' : pct >= 40 ? '😐' : '📚';
+  const area = document.getElementById('quizArea');
+  const scoreDiv = document.createElement('div');
+  scoreDiv.style.cssText = 'padding:16px;border-radius:12px;border:1px solid var(--accent);background:rgba(0,212,255,0.05);text-align:center;margin-top:8px';
+  scoreDiv.innerHTML = `<div style="font-size:32px">${emoji}</div>
+    <div style="font-size:18px;font-weight:800;color:var(--accent);margin:8px 0">${score}/${total} to'g'ri (${pct}%)</div>
+    <div style="font-size:13px;color:var(--text-dim)">${pct>=80?'Ajoyib natija!':pct>=60?'Yaxshi urinish!':pct>=40?'Ko\'proq mashq qiling!':'Qaytadan o\'qib chiqing!'}</div>
+    <button class="gen-btn" style="margin-top:12px" onclick="generateQuiz()">🔄 Yangi test</button>`;
+  area.appendChild(scoreDiv);
+}
+
+// ─── INIT ────────────────────────────────────────────────
+document.getElementById('userInput').focus();
 </script>
 </body>
-      </html>
+</html>
